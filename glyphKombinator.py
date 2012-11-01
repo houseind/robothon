@@ -16,10 +16,33 @@ def combineGlyphs(path1, path2, destPath):
             print "Inserting %s" % glyph.name
             ufo1.insertGlyph(glyph)
             added_glyphs.append(glyph.name)
+        else:
+        	print "Skipping %s" % glyph.name
     ufo1.save(destPath)
+    print "Combined UFO saved at %s" % destPath
 
-path1 = "Path to UFO"
-path2 = "Path to UFO"
-destPath = "Path to final UFO"
 
-combineGlyphs(path1, path2, destPath)
+def isUFOpath(ufoPath):
+	if os.path.isdir(ufoPath):
+		if (len(ufoPath) > 4) and (ufoPath[-4:] in ['.ufo','.UFO']):
+			return True
+	return False
+
+
+def getFontPath(string):
+	fontPath = raw_input("Path to %s: " % string).strip()
+	while not isUFOpath(fontPath):
+		print "Not a valid path to a UFO font. Please try again."
+		fontPath = raw_input("Path to %s: " % string).strip()
+	return fontPath
+
+
+if __name__=='__main__':
+	path1 = getFontPath("first UFO")
+	path2 = getFontPath("second UFO")
+	
+	if path1 != path2:
+		destPath = path1.replace(path1[-4:], "_KOMB_" + path1[-4:])
+		combineGlyphs(path1, path2, destPath)
+	else:
+		print "The two paths provided are the same UFO font!"
